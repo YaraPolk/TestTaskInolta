@@ -654,3 +654,131 @@ if ( ! function_exists( 'wp_get_list_item_separator' ) ) :
 		return __( ', ', 'twentytwentyone' );
 	}
 endif;
+
+add_action('init', 'create_movies_post_type');
+
+function create_movies_post_type(){
+
+	register_post_type(
+		'movies',
+		[
+			'labels' => [
+				'name' => 'Movies',
+				'singular_name' => 'movies',
+			],
+			'hierarchical'      => true,
+			'menu_icon'         => 'dashicons-format-video',
+			'public'            => true,
+			'query_var'         => true,
+			'show_in_nav_menus' => true,
+			'show_in_rest'      => false,
+			'menu_position'     => 4,
+			'supports'          => ['title', 'editor'],
+		]
+	);
+
+	register_taxonomy('movie_genre', [ 'movies' ], [
+		'labels'                => [
+			'name'              => 'Movies Genre',
+			'singular_name'     => 'movie_genre',
+			'search_items'      => 'Search Genre',
+			'all_items'         => 'All Genres',
+			'view_item '        => 'View Genre',
+			'edit_item'         => 'Edit Genre',
+			'update_item'       => 'Update Genre',
+			'add_new_item'      => 'Add New Genre',
+			'new_item_name'     => 'New Genre Name',
+			'menu_name'         => 'Genres',
+			'back_to_items'     => '← Back to Genres',
+		],
+		'hierarchical'          => true,
+		'public'                => true,
+		'query_var'             => true,
+		'show_admin_column'     => true,
+		'show_in_nav_menus'     => true,
+		'show_ui'               => true,
+	]);
+
+	register_taxonomy_for_object_type('movie_genre', 'movies');
+
+	register_taxonomy('movie_country', [ 'movies' ], [
+		'labels'                => [
+			'name'              => 'Movie countries',
+			'singular_name'     => 'movie_country',
+			'search_items'      => 'Search country',
+			'all_items'         => 'All countries',
+			'view_item '        => 'View country',
+			'edit_item'         => 'Edit country',
+			'update_item'       => 'Update country',
+			'add_new_item'      => 'Add New country',
+			'new_item_name'     => 'New country',
+			'menu_name'         => 'Countries',
+			'back_to_items'     => '← Back to Countries',
+		],
+		'hierarchical'          => true,
+		'public'                => true,
+		'query_var'             => true,
+		'show_admin_column'     => true,
+		'show_in_nav_menus'     => true,
+		'show_ui'               => true,
+	]);
+
+	register_taxonomy_for_object_type('movie_country', 'movies');
+
+	register_taxonomy('movie_actor', [ 'movies' ], [
+		'labels'                => [
+			'name'              => 'Movies Actor',
+			'singular_name'     => 'movie_actor',
+			'search_items'      => 'Search Actor',
+			'all_items'         => 'All Actors',
+			'view_item '        => 'View Actor',
+			'edit_item'         => 'Edit Actor',
+			'update_item'       => 'Update Actor',
+			'add_new_item'      => 'Add New Actor',
+			'new_item_name'     => 'New Actor Name',
+			'menu_name'         => 'Actors',
+			'back_to_items'     => '← Back to Actors',
+		],
+		'hierarchical'          => true,
+		'public'                => true,
+		'query_var'             => true,
+		'show_admin_column'     => true,
+		'show_in_nav_menus'     => true,
+		'show_ui'               => true,
+	]);
+
+	register_taxonomy_for_object_type('movie_actor', 'movies');
+}
+
+add_filter('manage_movies_posts_columns', 'filterPostsColumns');
+function filterPostsColumns(): array
+{
+	return [
+		'cb'                        => '<input type="checkbox" />',
+		'title'                     => 'Movie name',
+		'taxonomy-movie_actor'      => 'Actors',
+		'taxonomy-movie_genre'      => 'Genres',
+		'taxonomy-movie_country'    => 'Country',
+		'cost'                      => 'Cost',
+		'creation_date'             => 'Movie Date',
+		'date'                      => 'Date',
+	];
+}
+
+function addDateMovies($columnName, $movieId): void
+{
+	$movies = get_fields($movieId);
+
+	switch ($columnName) {
+		case 'cost':
+			echo $movies['cost'] . '$';
+			break;
+		case 'creation_date':
+			echo $movies['creation_date'];
+			break;
+		default:
+			break;
+	}
+}
+
+add_action('manage_movies_posts_custom_column', 'addDateMovies', 10, 2);
