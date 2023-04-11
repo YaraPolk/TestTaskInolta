@@ -786,7 +786,7 @@ get_template_part('custom', 'fields');
 
 function StylesAndScripts() {
 	wp_enqueue_style('style_for_site', get_stylesheet_directory_uri() . '/assets/css/movies.css');
-	wp_enqueue_script('filter', get_stylesheet_directory_uri() . '/assets/js/filter.js', ['jquery'], time(), true);
+	wp_enqueue_script('filter', get_stylesheet_directory_uri() . '/assets/js/filter.js', ['jquery'], true);
 	wp_localize_script('filter', 'cat_filter', ['ajaxurl' => admin_url( 'admin-ajax.php' )]);
 }
 
@@ -794,4 +794,23 @@ add_action( 'wp_enqueue_scripts', 'StylesAndScripts', 25 );
 
 add_action( 'wp_ajax_filter', 'true_filter_function' );
 add_action( 'wp_ajax_nopriv_filter', 'true_filter_function' );
+
+
+function true_filter_function(){
+	query_posts([
+		'post_type' => 'movies',
+		'orderby' => ['title' => 'ASC'],
+		'posts_per_page' => -1,
+		'tax_query' => [
+			[
+				'taxonomy' => 'movie_genre',
+				'field'    => 'id',
+				'terms'    => $_POST['genres_filter'],
+			],
+		]
+	]);
+
+	load_template(get_template_directory() . '/templates/filter.php');
+	wp_die();
+}
 

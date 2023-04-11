@@ -13,6 +13,13 @@ main.movie__content h1 {
     margin-bottom: 5%;
 }
 
+main form {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .movie {
     display: flex;
     width: 90%;
