@@ -1,0 +1,17 @@
+### WordPress template
+# Core
+#
+# Note: if you want to stage/commit WP core files
+# you can delete this whole section/until Configuration.
+/wordpress/wp-content/index.php
+/wordpress/wp-content/languages
+/wordpress/wp-content/plugins/index.php
+/wordpress/wp-content/themes/index.php
+/wordpress/wp-content/themes/twentytwentythree
+/wordpress/wp-content/themes/twentytwentytwo
+/wordpress/mysql
+
+# Uploads
+/wp-content/uploads/
+
+
