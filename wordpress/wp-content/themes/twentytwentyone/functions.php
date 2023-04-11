@@ -657,8 +657,8 @@ endif;
 
 add_action('init', 'create_movies_post_type');
 
-function create_movies_post_type(){
-
+function create_movies_post_type(): void
+{
 	register_post_type(
 		'movies',
 		[
@@ -782,3 +782,5 @@ function addDateMovies($columnName, $movieId): void
 }
 
 add_action('manage_movies_posts_custom_column', 'addDateMovies', 10, 2);
+get_template_part('custom', 'fields');
+
